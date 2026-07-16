@@ -1,4 +1,8 @@
-from app.config import OPENAI_API_KEY
+# from app.config import OPENAI_API_KEY
+from app.ingestion.loader import load_repository
 
-print("Project setup successful")
-print(f"API Key Loaded: {OPENAI_API_KEY[:10]}...")
+
+documents = load_repository("./")
+print(f"Loaded {len(documents)} documents")
+
+print(documents[0])
