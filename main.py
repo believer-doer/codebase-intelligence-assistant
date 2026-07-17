@@ -2,24 +2,45 @@ from app.ingestion.loader import load_repository
 from app.ingestion.chunker import chunk_documents
 from app.embeddings.embedder import get_embedding_model
 from app.vectorstore.chroma_store import (reset_collection, index_chunks)
+from app.retrieval.retriever import retrieve
 from dotenv import load_dotenv
 
 load_dotenv()
 
+# load repo into Documents
 documents = load_repository(".")
 
 print(f"Loaded {len(documents)} documents")
 
+#chunking
 chunks = chunk_documents(documents)
 
 print(f"Created {len(chunks)} chunks")
 
 
+# embeding
 embedding_model = get_embedding_model()
 
 reset_collection()
 
 index_chunks(chunks, embedding_model)
 
-for chunk in chunks[:10]:
-    print(chunk.metadata)
+# retrieve
+
+retrieved_results = retrieve("How does repository loading work?")
+
+for i, doc in enumerate(
+    retrieved_results["documents"][0]
+):
+
+    print("\n" + "=" * 80)
+
+    print(f"Result #{i+1}")
+
+    print(
+        retrieved_results["metadatas"][0][i]
+    )
+
+    print()
+
+    print(doc[:500])
