@@ -26,21 +26,22 @@ reset_collection()
 index_chunks(chunks, embedding_model)
 
 # retrieve
+queries = ["generate embeddings"]
+for query in queries:
+    retrieved_results = retrieve(query, 5, ".py")
 
-retrieved_results = retrieve("How does repository loading work?")
+    for i, doc in enumerate(
+        retrieved_results["documents"][0]
+    ):
 
-for i, doc in enumerate(
-    retrieved_results["documents"][0]
-):
+        print("\n" + "=" * 80)
 
-    print("\n" + "=" * 80)
+        print(f"Result #{i+1}")
 
-    print(f"Result #{i+1}")
+        print(
+            retrieved_results["metadatas"][0][i]
+        )
 
-    print(
-        retrieved_results["metadatas"][0][i]
-    )
+        print()
 
-    print()
-
-    print(doc[:500])
+        print(doc[:500])
