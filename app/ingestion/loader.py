@@ -24,6 +24,7 @@ IGNORED_DIRECTORIES = {
 
 
 def load_repository(repo_path):
+    
     repo_path = Path(repo_path)
 
     print(f"Loading repository from: {repo_path}")
