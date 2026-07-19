@@ -15,10 +15,15 @@ parser.add_argument(
     "value"
 )
 
+parser.add_argument(
+    "--show-context",
+    action="store_true"
+)
+
 args = parser.parse_args()
 
 if args.command == "index":
     index_repository(args.value)
 
 elif args.command == "ask":
-    ask_question(args.value)
+    ask_question(args.value, show_context = args.show_context)

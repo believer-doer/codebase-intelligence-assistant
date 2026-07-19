@@ -54,7 +54,7 @@ def build_prompt(
         {question}
     """
 
-def answer_question(question):
+def answer_question(question, show_context: bool = False):
     
     results = retrieve(
         question,
@@ -64,6 +64,21 @@ def answer_question(question):
     if not results["documents"][0]:
         return "No relevant documents found."
     
+    if show_context:
+        print("\n" + "=" * 80)
+
+        for index, document in enumerate(
+            results["documents"][0],
+            start=1
+        ):
+            print(
+                f"\nRetrieved Chunk {index}\n"
+            )
+
+            print(document)
+
+            print("\n" + "-" * 80)
+
     context = build_context(results)
 
     prompt = build_prompt(

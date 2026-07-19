@@ -2,7 +2,7 @@ from app.vectorstore.chroma_store import ( get_collection)
 from app.chains.rag_chain import (answer_question)
 
 
-def  ask_question(query):
+def  ask_question(query, show_context = False):
     collection = get_collection()
 
     count = collection.count()
@@ -16,5 +16,5 @@ def  ask_question(query):
     
     
 
-    answer = answer_question(query)
+    answer = answer_question(query, show_context = show_context)
     print(answer)
