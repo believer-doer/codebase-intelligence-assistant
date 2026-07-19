@@ -1,5 +1,5 @@
 from app.vectorstore.chroma_store import ( get_collection)
-from app.retrieval.retriever import retrieve
+from app.chains.rag_chain import (answer_question)
 
 
 def  ask_question(query):
@@ -14,17 +14,7 @@ def  ask_question(query):
         )
         return
     
-    results = retrieve(query)
+    
 
-    for i, doc in enumerate(
-        results["documents"][0]
-    ):
-        print("\n" + "=" * 80)
-
-        print(
-            results["metadatas"][0][i]
-        )
-
-        print()
-
-        print(doc[:500])
+    answer = answer_question(query)
+    print(answer)
