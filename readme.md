@@ -35,26 +35,6 @@ This project explores how AI systems can help developers understand unfamiliar c
 
 ---
 
-## Current Status
-
-🚧 Stage 1 – In Progress
-
-Current functionality:
-
-* Repository loading
-* File filtering
-* LangChain Document creation
-
-Upcoming:
-
-* Chunking
-* Embeddings
-* ChromaDB integration
-* Retrieval
-* RAG question answering
-
----
-
 ## Architecture Roadmap
 
 ### Stage 1 – RAG Foundation
