@@ -1,4 +1,6 @@
 # Codebase Intelligence Assistant
+Built from scratch as a learning project to understand: 
+LangChain, RAG, embeddings, vector databases, retrieval systems, and agent architectures.
 
 An AI-powered assistant that understands software repositories and helps developers explore, analyze, and reason about codebases using Retrieval-Augmented Generation (RAG).
 
@@ -10,7 +12,8 @@ Instead of manually navigating hundreds of files, developers can ask natural lan
 * Explain the checkout flow.
 * Which files are responsible for payment processing?
 
-The assistant indexes a repository, performs semantic search over the codebase, retrieves relevant context, and uses an LLM to generate grounded answers.
+The assistant indexes a repository, performs semantic search over the codebase, retrieves relevant context, and uses a local LLM to generate grounded answers.
+
 
 ---
 
@@ -35,7 +38,27 @@ This project explores how AI systems can help developers understand unfamiliar c
 
 ---
 
-## Architecture Roadmap
+## Current Status
+
+✅ Stage 1 – Complete
+
+Implemented features:
+
+* Repository loading
+* File filtering
+* LangChain document creation
+* Chunking with overlap
+* Embeddings generation
+* ChromaDB vector storage
+* Semantic retrieval
+* Metadata filtering
+* Local LLM integration (Ollama)
+* End-to-end RAG pipeline
+* Retrieval debugging mode
+
+---
+
+## Architecture
 
 ### Stage 1 – RAG Foundation
 
@@ -52,10 +75,34 @@ ChromaDB
     ↓
 Retriever
     ↓
-OpenAI
+Qwen (Ollama)
     ↓
 Answer
 ```
+
+### Current Retrieval Flow
+
+```text
+User Question
+       ↓
+Query Embedding
+       ↓
+ChromaDB Search
+       ↓
+Relevant Chunks
+       ↓
+Context Builder
+       ↓
+Prompt Builder
+       ↓
+Qwen 2.5 (3B)
+       ↓
+Answer
+```
+
+---
+
+## Roadmap
 
 ### Stage 2 – Enhanced Retrieval
 
@@ -63,6 +110,8 @@ Answer
 * Repository summaries
 * Architecture analysis
 * Multi-repository support
+* Query rewriting
+* Retrieval optimization
 
 ### Stage 3 – Agentic Capabilities
 
@@ -110,20 +159,25 @@ Search Again   Answer
 
 ### AI Layer
 
-* OpenAI
 * LangChain
-* LangGraph
+* LangGraph (planned)
+* Ollama
+* Qwen 2.5 (3B)
+
+### Embeddings Layer
+
+* Sentence Transformers
+* all-MiniLM-L6-v2
 
 ### Retrieval Layer
 
 * ChromaDB
-* OpenAI Embeddings
 
 ### Application Layer
 
 * Python
-* FastAPI
-* Streamlit
+* FastAPI (planned)
+* Streamlit (planned)
 
 ---
 
@@ -134,21 +188,45 @@ codebase-intelligence-assistant/
 
 app/
 │
-├── ingestion/
+├── chains/
+├── commands/
 ├── embeddings/
+├── ingestion/
+├── retrieval/
 ├── vectorstore/
-├── rag/
-├── cli/
 │
-├── config.py
-│
-└── main.py
-
-data/
+└── prompts/          (planned)
 
 docs/
-├── STAGE_1.md
-└── TASKS.md
+├── stage_1.md
+└── tasks.md
+
+main.py
+requirements.txt
+```
+
+---
+
+## Example Usage
+
+Index a repository:
+
+```bash
+python main.py index .
+```
+
+Ask a question:
+
+```bash
+python main.py ask "Where are embeddings generated?"
+```
+
+Inspect retrieval results:
+
+```bash
+python main.py ask \
+"Where are embeddings generated?" \
+--show-context
 ```
 
 ---
@@ -164,6 +242,7 @@ Topics explored include:
 * Chunking strategies
 * Embeddings
 * Vector databases
+* Semantic search
 * Retrieval-Augmented Generation (RAG)
 * Agent frameworks
 * LangGraph workflows
