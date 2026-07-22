@@ -1,6 +1,7 @@
 import argparse
 from app.commands.ask import ask_question
 from app.commands.index import index_repository
+from app.commands.summarize import summarize_repository
 
 
 # CLI command parser
@@ -8,7 +9,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument(
     "command",
-    choices=["index", "ask"],
+    choices=["index", "ask", "summarize"],
 )
 
 parser.add_argument(
@@ -20,6 +21,7 @@ parser.add_argument(
     action="store_true"
 )
 
+
 args = parser.parse_args()
 
 if args.command == "index":
@@ -27,3 +29,6 @@ if args.command == "index":
 
 elif args.command == "ask":
     ask_question(args.value, show_context = args.show_context)
+
+elif args.command == "summarize":
+    summarize_repository(args.value)
