@@ -54,11 +54,12 @@ def build_prompt(
         {question}
     """
 
-def answer_question(question, show_context: bool = False, show_scores: bool = False):
+def answer_question(question, show_context: bool = False, show_scores: bool = False, show_expanded_query: bool = False):
     
     results = retrieve(
         question,
-        extension=".py"
+        extension=".py",
+        show_expanded_query = show_expanded_query
     )
 
     if not results["documents"][0]:

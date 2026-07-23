@@ -26,13 +26,17 @@ parser.add_argument(
     action="store_true"
 )
 
+parser.add_argument(
+    "--show-expanded-query",
+    action="store_true"
+)
 args = parser.parse_args()
 
 if args.command == "index":
     index_repository(args.value)
 
 elif args.command == "ask":
-    ask_question(args.value, show_context = args.show_context, show_scores = args.show_scores)
+    ask_question(args.value, show_context = args.show_context, show_scores = args.show_scores, show_expanded_query = args.show_expanded_query)
 
 elif args.command == "summarize":
     summarize_repository(args.value)
