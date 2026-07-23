@@ -21,6 +21,10 @@ parser.add_argument(
     action="store_true"
 )
 
+parser.add_argument(
+    "--show-scores",
+    action="store_true"
+)
 
 args = parser.parse_args()
 
@@ -28,7 +32,7 @@ if args.command == "index":
     index_repository(args.value)
 
 elif args.command == "ask":
-    ask_question(args.value, show_context = args.show_context)
+    ask_question(args.value, show_context = args.show_context, show_scores = args.show_scores)
 
 elif args.command == "summarize":
     summarize_repository(args.value)

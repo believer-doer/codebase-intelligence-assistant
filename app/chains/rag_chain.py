@@ -54,7 +54,7 @@ def build_prompt(
         {question}
     """
 
-def answer_question(question, show_context: bool = False):
+def answer_question(question, show_context: bool = False, show_scores: bool = False):
     
     results = retrieve(
         question,
@@ -78,6 +78,23 @@ def answer_question(question, show_context: bool = False):
             print(document)
 
             print("\n" + "-" * 80)
+
+    if show_scores:
+
+        print("\n" + "=" * 80)
+        print("Retrieval Scores")
+
+        for index, distance in enumerate(
+            results["distances"][0],
+            start=1
+        ):
+            similarity = 1 / (1 + distance)
+
+            print(
+                f"Chunk {index} | "
+                f"Distance: {distance:.4f} | "
+                f"Score: {similarity:.3f}"
+            )
 
     context = build_context(results)
 
