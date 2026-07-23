@@ -36,8 +36,13 @@ def generate_repository_summary(file_summaries):
         - Use ONLY information from the file summaries.
         - Do NOT invent files, modules, functions, classes, or technologies.
         - If information is missing or unclear, explicitly say so.
-        - Mention file paths when discussing important modules.
+        - Mention exact file paths when discussing important modules.
         - Be concise but informative.
+        - Mention exact function names.
+        - If multiple locations are relevant,
+        list all of them.
+        - Do not choose only one location
+        when several locations match.
 
         Give your output in the following format:
 
