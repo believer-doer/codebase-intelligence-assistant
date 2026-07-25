@@ -20,6 +20,8 @@ IGNORED_DIRECTORIES = {
     "node_modules",
     "dist",
     "build",
+    "data",          
+    "chroma_db", 
 }
 
 

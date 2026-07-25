@@ -2,6 +2,7 @@ import argparse
 from app.commands.ask import ask_question
 from app.commands.index import index_repository
 from app.commands.summarize import summarize_repository
+from app.evaluator.retrieval_evaluator import evaluate_retrieval
 
 
 # CLI command parser
@@ -9,11 +10,12 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument(
     "command",
-    choices=["index", "ask", "summarize"],
+    choices=["index", "ask", "summarize", "evaluate"],
 )
 
 parser.add_argument(
-    "value"
+    "value",
+    nargs="?",
 )
 
 parser.add_argument(
@@ -30,6 +32,8 @@ parser.add_argument(
     "--show-expanded-query",
     action="store_true"
 )
+
+
 args = parser.parse_args()
 
 if args.command == "index":
@@ -40,3 +44,6 @@ elif args.command == "ask":
 
 elif args.command == "summarize":
     summarize_repository(args.value)
+
+elif args.command == "evaluate":
+    evaluate_retrieval()
