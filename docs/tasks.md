@@ -54,7 +54,6 @@ Install:
 
 ```bash
 langchain
-langchain-openai
 langchain-community
 chromadb
 python-dotenv
@@ -202,12 +201,6 @@ Create:
 
 ```python
 create_embeddings()
-```
-
-Use:
-
-```python
-OpenAIEmbeddings
 ```
 
 Read API key from:

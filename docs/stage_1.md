@@ -39,7 +39,7 @@ ChromaDB
     ↓
 Retriever
     ↓
-OpenAI LLM
+Open Source LLM
     ↓
 Answer
 ```
@@ -120,7 +120,7 @@ These values can be tuned later.
 
 ### Embeddings
 
-Generate embeddings for each chunk using OpenAI embeddings.
+Generate embeddings for each chunk using Open Source Embedder embeddings.
 
 Example:
 
@@ -173,7 +173,7 @@ Question
       +
 Retrieved Code
       ↓
-OpenAI
+Open Source Model
       ↓
 Answer
 ```
