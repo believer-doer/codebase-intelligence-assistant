@@ -2,6 +2,7 @@
 
 from app.retrieval.hybrid_retriever import hybrid_retrieve
 from langchain_ollama import  ChatOllama
+from app.retrieval.retrieval_analyzer import analyze_retrieval
 
 llm = ChatOllama(
         model="qwen2.5:3b"
@@ -63,7 +64,15 @@ def answer_question(question, show_context: bool = False, show_scores: bool = Fa
 
     if not results:
         return "No relevant documents found."
-    
+
+
+    analysis = analyze_retrieval(
+        question,
+        results
+    )
+    print("Retrieval Analysis:")
+    print(analysis)
+
     if show_context:
         print("\n" + "=" * 80)
 
