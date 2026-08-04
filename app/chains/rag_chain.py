@@ -1,8 +1,8 @@
-# app/chains/rag_chain.py
 
 from app.retrieval.hybrid_retriever import hybrid_retrieve
 from langchain_ollama import  ChatOllama
 from app.retrieval.retrieval_analyzer import analyze_retrieval
+from app.retrieval.query_refiner import generate_followup_queries
 
 llm = ChatOllama(
         model="qwen2.5:3b"
@@ -70,8 +70,44 @@ def answer_question(question, show_context: bool = False, show_scores: bool = Fa
         question,
         results
     )
-    print("Retrieval Analysis:")
-    print(analysis)
+
+    print(f"Retrieval Analysis: {analysis}")
+
+    if not analysis["enough_context"]:
+
+        queries = generate_followup_queries(
+            question,
+            analysis
+        )
+        
+        print(f"Generated Follow-up Queries: {queries}")
+
+        for query in queries:
+
+            extra_results = hybrid_retrieve(
+                query,
+                extension=".py"
+            )
+
+            results.extend(
+                extra_results
+            )
+
+            seen = set()
+            unique_results = []
+
+            for result in results:
+
+                chunk_id = (
+                    result["metadata"]["file_path"],
+                    result["metadata"]["chunk_index"]
+                )
+
+                if chunk_id not in seen:
+                    seen.add(chunk_id)
+                    unique_results.append(result)
+
+            results = unique_results
 
     if show_context:
         print("\n" + "=" * 80)
