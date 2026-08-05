@@ -40,7 +40,7 @@ This project explores how AI systems can help developers understand unfamiliar c
 
 ## Current Status
 
-✅ Stage 1 – Complete
+✅ Stage 3 – Complete
 
 Implemented features:
 
