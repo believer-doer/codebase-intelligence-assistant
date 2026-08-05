@@ -1,8 +1,5 @@
-
-from app.retrieval.hybrid_retriever import hybrid_retrieve
 from langchain_ollama import  ChatOllama
-from app.retrieval.retrieval_analyzer import analyze_retrieval
-from app.retrieval.query_refiner import generate_followup_queries
+from app.agent.retrieval_agent import agent_retrieve
 
 llm = ChatOllama(
         model="qwen2.5:3b"
@@ -13,148 +10,107 @@ def build_context(results):
     sections = []
 
     for result in results:
-        doc = result["document"]
+
         metadata = result["metadata"]
 
         sections.append(
             f"""
-    === FILE: {metadata["file_path"]} ===
+=== FILE ===
+{metadata["file_path"]}
 
-    {doc}
-    """
+=== CHUNK ===
+{metadata["chunk_index"]}
+
+{result["document"]}
+"""
         )
 
     return "\n\n".join(sections)
 
 
 
-def build_prompt(
-    question: str,
-    context: str
-):
+def build_prompt(question, context):
+
     return f"""
-        You are a codebase assistant.
+You are an expert software engineering assistant.
 
-        Use only the provided context.
+Answer ONLY using the retrieved repository context.
 
-        If the answer cannot be found in the context,
-        say:
+Rules:
 
-        "I could not find that information in the indexed repository."
+- Never invent code.
+- If unsure, say so.
+- Mention relevant file names.
+- Mention function names.
+- Explain relationships between files when possible.
+- Prefer concrete code over summaries.
 
-        When possible:
-        - Mention file names.
-        - Mention function names.
-        - Be concise.
+Repository Context:
 
-        Context:
-        {context}
+{context}
 
-        Question:
-        {question}
-    """
+User Question:
 
-def answer_question(question, show_context: bool = False, show_scores: bool = False, show_expanded_query: bool = False):
+{question}
+"""
+
+
     
-    results = hybrid_retrieve(
+def answer_question(
+    question,
+    show_context=False,
+    show_scores=False,
+    show_expanded_query=False,
+):
+
+
+    results = agent_retrieve(
         question,
         extension=".py",
-        show_expanded_query = show_expanded_query
+        show_plan=True,
+        show_reasoning=True,
+        show_expanded_query=True,
     )
-
     if not results:
         return "No relevant documents found."
 
-
-    analysis = analyze_retrieval(
-        question,
-        results
-    )
-
-    print(f"Retrieval Analysis: {analysis}")
-
-    if not analysis["enough_context"]:
-
-        queries = generate_followup_queries(
-            question,
-            analysis
-        )
-        
-        print(f"Generated Follow-up Queries: {queries}")
-
-        for query in queries:
-
-            extra_results = hybrid_retrieve(
-                query,
-                extension=".py"
-            )
-
-            results.extend(
-                extra_results
-            )
-
-            seen = set()
-            unique_results = []
-
-            for result in results:
-
-                chunk_id = (
-                    result["metadata"]["file_path"],
-                    result["metadata"]["chunk_index"]
-                )
-
-                if chunk_id not in seen:
-                    seen.add(chunk_id)
-                    unique_results.append(result)
-
-            results = unique_results
-
     if show_context:
+
         print("\n" + "=" * 80)
 
-        for index, result in enumerate(
-            results,
-            start=1
-        ):
-            print(f"\nRetrieved Chunk {index}\n")
+        for i, result in enumerate(results, start=1):
 
+            print(f"\nRetrieved Chunk {i}\n")
             print(result["document"])
-
             print("\n" + "-" * 80)
-                
 
     if show_scores:
 
         print("\n" + "=" * 80)
         print("Retrieval Scores")
 
-        for index, result in enumerate(
-            results,
-            start=1
-        ):
+        for i, result in enumerate(results, start=1):
 
             print(
-                f"Chunk {index} | "
+                f"Chunk {i} | "
                 f"Source: {result['source']} | "
-                f"Score: {result['score']}"
+                f"Score: {result['score']:.3f}"
             )
-            
 
     context = build_context(results)
 
     prompt = build_prompt(
         question,
-        context
+        context,
     )
-
 
     response = llm.invoke(prompt)
 
-    sources = {
+    sources = sorted({
         result["metadata"]["file_path"]
         for result in results
-    }
-    
+    })
+
     return (
         response.content
         + "\n\nSources:\n"
